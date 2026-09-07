@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DevOps cho Senior Frontend / Tech Lead — 6 tuần</title>
+  <style>
+    :root { --ink:#17231d; --muted:#647068; --paper:#f6f3e9; --card:#fffdf7; --green:#176b4d; --lime:#cbe86b; --orange:#ee875d; --line:#d9ded5; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    header { background:var(--ink); color:white; padding:64px 20px 52px; }
+    .wrap { width:min(1080px, calc(100% - 40px)); margin:auto; }
+    .eyebrow { color:var(--lime); font-weight:800; letter-spacing:.12em; text-transform:uppercase; font-size:.78rem; }
+    h1 { max-width:780px; font-size:clamp(2.3rem,6vw,4.2rem); line-height:1; margin:12px 0 22px; letter-spacing:-.05em; }
+    header p { max-width:680px; color:#d4ddd7; font-size:1.1rem; }
+    .stats { display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
+    .stat { padding:10px 16px; border:1px solid #526059; border-radius:999px; }
+    nav { position:sticky; top:0; z-index:5; background:rgba(246,243,233,.94); border-bottom:1px solid var(--line); backdrop-filter:blur(10px); }
+    nav .wrap { display:flex; gap:22px; overflow:auto; }
+    nav a { padding:14px 0; color:var(--ink); text-decoration:none; white-space:nowrap; font-weight:700; font-size:.9rem; }
+    main { padding:48px 0 80px; }
+    section { margin-bottom:64px; scroll-margin-top:64px; }
+    h2 { font-size:clamp(1.8rem,4vw,2.8rem); line-height:1.1; letter-spacing:-.03em; margin:0 0 12px; }
+    .lead { color:var(--muted); max-width:720px; margin:0 0 28px; }
+    .rule { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .rule article,.phase,.tip { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; box-shadow:0 8px 24px rgba(23,35,29,.04); }
+    .rule b { display:block; color:var(--green); font-size:1.8rem; margin-bottom:5px; }
+    .phases { display:grid; gap:18px; }
+    .phase { display:grid; grid-template-columns:140px 1fr; gap:24px; position:relative; overflow:hidden; }
+    .phase::before { content:""; position:absolute; inset:0 auto 0 0; width:7px; background:var(--accent,var(--green)); }
+    .when { color:var(--green); font-weight:900; text-transform:uppercase; letter-spacing:.05em; }
+    .phase h3 { font-size:1.35rem; margin:0 0 6px; }
+    .phase p { color:var(--muted); margin:0 0 14px; }
+    .tasks { display:grid; gap:9px; }
+    label { display:flex; gap:10px; align-items:flex-start; cursor:pointer; }
+    input[type=checkbox] { appearance:none; flex:0 0 20px; height:20px; margin-top:3px; border:2px solid #9aa69f; border-radius:6px; display:grid; place-content:center; }
+    input[type=checkbox]:checked { background:var(--green); border-color:var(--green); }
+    input[type=checkbox]:checked::after { content:"✓"; color:white; font-size:14px; font-weight:900; }
+    label:has(input:checked) span { text-decoration:line-through; color:#849088; }
+    code { background:#e8ece5; padding:2px 6px; border-radius:5px; font-size:.9em; }
+    .progress-box { display:grid; grid-template-columns:1fr auto; align-items:center; gap:16px; background:var(--green); color:white; padding:22px; border-radius:18px; margin-bottom:24px; }
+    .bar { height:10px; overflow:hidden; background:#4a896f; border-radius:99px; margin-top:8px; }
+    .bar i { display:block; width:0; height:100%; background:var(--lime); transition:.25s; }
+    #pct { font-size:2rem; font-weight:900; }
+    .tips { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+    .week { background:var(--card); border:1px solid var(--line); border-radius:20px; overflow:hidden; margin-bottom:22px; }
+    .week-head { padding:22px 24px; background:var(--ink); color:white; display:flex; justify-content:space-between; gap:20px; align-items:end; }
+    .week-head h3 { margin:0; font-size:1.45rem; }
+    .week-head p { margin:4px 0 0; color:#cbd5cf; }
+    .hours { color:var(--lime); font-size:1.25rem; font-weight:900; white-space:nowrap; }
+    .day { display:grid; grid-template-columns:85px 48px 1.2fr 1fr; gap:16px; padding:16px 22px; border-top:1px solid var(--line); align-items:start; }
+    .day:first-of-type { border-top:0; }
+    .day-name { font-weight:900; color:var(--green); }
+    .day-time { font-weight:800; }
+    .day b { display:block; margin-bottom:3px; }
+    .output { color:var(--muted); }
+    .total { background:var(--lime); border-radius:18px; padding:20px 24px; display:flex; justify-content:space-between; gap:20px; align-items:center; margin:24px 0; }
+    .total strong { font-size:1.5rem; }
+    .tip h3 { margin-top:0; }
+    footer { border-top:1px solid var(--line); padding:28px 0; color:var(--muted); }
+    button { border:1px solid #91a097; border-radius:9px; background:transparent; color:white; padding:8px 12px; cursor:pointer; }
+    @media (max-width:700px) { .rule,.tips { grid-template-columns:1fr; } .phase { grid-template-columns:1fr; gap:8px; padding-left:26px; } .day { grid-template-columns:1fr; gap:4px; } .week-head,.total { align-items:flex-start; flex-direction:column; } header { padding-top:44px; } }
+    @media print { nav,button { display:none; } header { padding:28px 0; } body { background:white; } .phase { break-inside:avoid; } }
+    a { color:var(--green); text-underline-offset:3px; }
+    .source-note,.gate,.buffer { padding:16px 22px; margin:0; border-top:1px solid var(--line); }
+    .gate { background:#edf2e5; }
+    .buffer { color:var(--muted); }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; background:var(--card); }
+    th,td { padding:13px 16px; border:1px solid var(--line); text-align:left; vertical-align:top; }
+    th { background:#e8ece5; }
+    .flow { padding:18px 22px; background:var(--ink); color:white; border-radius:12px; overflow-wrap:anywhere; }
+    .resources { padding-left:22px; }
+    .resources li { margin-bottom:10px; }
+    .day > *, .tips > * { min-width:0; }
+    .day span,.tip p,td { overflow-wrap:anywhere; }
+    :focus-visible { outline:3px solid var(--orange); outline-offset:4px; }
+    #storage-note { font-size:.9rem; }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } .bar i { transition:none; } }
+    @media print { .day,.tip,.gate,tr { break-inside:avoid; } .week-head { background:white; color:var(--ink); } .week-head p,.hours { color:var(--ink); } }
+  </style>
+</head>
+<body>
+  <header><div class="wrap">
+    <div class="eyebrow">Dành cho Senior Frontend · 4+ năm FE / 3+ năm tiếp xúc Jenkins</div>
+    <h1>DevOps cho Frontend<br>và Tech Lead.</h1>
+    <p>Làm chủ cách ứng dụng được đóng gói, phát hành, quan sát và khôi phục. Lộ trình cá nhân hóa từ tài liệu trong repo, bổ sung phần CDN/cache và vận hành frontend còn thiếu.</p>
+    <div class="stats"><span class="stat">6 tuần</span><span class="stat">30 buổi chính × 3h</span><span class="stat">18h dự phòng</span><span class="stat">1 dự án xuyên suốt</span></div>
+  </div></header>
+  <nav aria-label="Mục lục"><div class="wrap"><a href="#danh-gia">Đánh giá</a><a href="#cach-hoc">Cách học</a><a href="#du-an">Dự án</a><a href="#lo-trinh">Lịch học</a><a href="#tai-lieu">Tài liệu</a></div></nav>
+  <main class="wrap">
+    <section id="danh-gia"><h2>Bắt đầu từ kinh nghiệm bạn đã có</h2>
+      <p class="lead">Mục tiêu đã chọn: bổ sung DevOps để làm Frontend/Tech Lead tốt hơn, học khoảng 3–4 giờ/ngày. Kinh nghiệm pipeline giúp rút ngắn phần nhập môn; mức tự chủ Linux, AWS và hạ tầng sẽ được xác nhận ở buổi đầu.</p>
+      <div class="table-wrap"><table><caption>Điều chỉnh so với plan fresher 30 ngày</caption><thead><tr><th scope="col">Mảng</th><th scope="col">Cách học mới</th><th scope="col">Lý do</th></tr></thead><tbody>
+        <tr><td>Git, app build/test, CI/CD concepts</td><td>Kiểm tra nhanh; chỉ ôn phần chưa tự giải thích được</td><td>Tận dụng kinh nghiệm FE và pipeline sẵn có</td></tr>
+        <tr><td>Jenkins</td><td>Artifact, agent, credential scope, release gate và rollback</td><td>Tiếp xúc pipeline chưa xác nhận khả năng tự thiết kế hay quản trị Jenkins</td></tr>
+        <tr><td>Linux, networking, IAM, Terraform</td><td>Giữ phần thực hành nền tảng và chẩn đoán</td><td>Đây là các năng lực cần kiểm tra riêng, không suy ra từ số năm làm FE</td></tr>
+        <tr><td>Frontend delivery</td><td>Tăng CDN/cache, SPA routing, cấu hình, immutable artifact và browser smoke</td><td>Áp dụng trực tiếp vào chất lượng release và quyết định của Tech Lead</td></tr>
+        <tr><td>Kubernetes</td><td>Deploy, đọc manifest, debug và phối hợp Platform</td><td>Một tuần lab local, không yêu cầu quản trị cluster production</td></tr>
+      </tbody></table></div>
+      <p><strong>Phạm vi sau 6 tuần:</strong> tự làm và giải thích được một quy trình release frontend trong môi trường lab, xử lý sự cố ứng dụng/container và viết yêu cầu triển khai rõ cho đội Platform. Kinh nghiệm production được tích lũy tiếp qua công việc thực tế.</p>
+    </section>
+    <section id="cach-hoc"><h2>Nhịp học có chỗ cho lỗi và công việc</h2>
+      <div class="rule"><article><b>90h</b>30 buổi chính, mỗi buổi 3 giờ. Mỗi tuần học 5 buổi theo thứ tự.</article><article><b>18h</b>6 buổi bù, mỗi tuần 3 giờ để sửa lab hoặc củng cố điểm yếu.</article><article><b>1 ngày</b>Nghỉ mỗi tuần. Giờ thứ 4 nếu có dùng để đào sâu, không thêm công cụ bắt buộc.</article></div>
+      <div class="total"><div><strong>108 giờ dự kiến / 6 tuần</strong><br>18 giờ/tuần gồm học chính và dự phòng; setup môi trường nằm trong lịch.</div><div>30 phút đọc · 120 phút làm<br>30 phút kiểm chứng/ghi chép mỗi buổi chính</div></div>
+      <p><strong>Cách rút ngắn:</strong> nếu vượt tiêu chí thực hành của một buổi và giải thích được, dùng thời gian đó cho phần yếu hoặc dự phòng. Không bỏ Linux/AWS chỉ vì đã làm FE lâu năm. Nếu chưa đạt checkpoint sau buổi bù, giãn lịch trước khi học tiếp phần phụ thuộc.</p>
+      <p><strong>Chuẩn bị theo tuần:</strong> tuần 1 dùng Git, Node và Linux VM; tuần 2 thêm Docker/Compose; tuần 3 tài khoản AWS lab và CLI; tuần 4 Terraform/Jenkins; tuần 5 kind hoặc Minikube và kubectl. Kiểm tra tài nguyên máy theo tài liệu công cụ; tắt lab không dùng để tránh tranh CPU/RAM.</p>
+    </section>
+    <section id="du-an"><h2>Một app, hai môi trường học rõ ràng</h2>
+      <p class="lead">Chọn một SPA cá nhân bằng stack quen thuộc, có /dashboard và một tương tác kiểm thử được; thêm Node API tối giản cho lab container. Dùng fixture JSON cho bản cloud để tập trung vào phát hành frontend, không phát triển backend/DB mới.</p>
+      <div class="tips"><article class="tip"><h3>Capstone chính · frontend trên AWS</h3><p>Browser → CloudFront HTTPS → S3 private qua OAC. Terraform tạo hạ tầng; Jenkins test/build, lưu artifact, publish và rollback. Bản cloud chỉ dùng SPA + dữ liệu fixture cùng origin. Static hosting không chạy Node SSR.</p></article><article class="tip"><h3>Lab bổ trợ · Docker và Kubernetes local</h3><p>Cùng SPA phục vụ qua Nginx → Node API. Tuần 2 chạy Compose; tuần 5 chuyển cùng image sang cluster local để học Service, probes và debug. API local không được khai báo thành endpoint của bản cloud.</p></article></div>
+      <p class="flow">Git → Jenkins agent → test → build → release artifact + checksum → S3 → CloudFront → browser smoke → giữ bản tốt hoặc rollback</p>
+      <p><strong>Môi trường CI:</strong> Jenkins controller local; agent build có Node và agent deploy có AWS CLI chạy bằng user tách biệt trên host lab; chỉ bind Jenkins vào môi trường local tin cậy. Dùng SCM polling hoặc chạy build thủ công, không cần mở webhook Internet. Chỉ deploy từ branch tin cậy; quyền deploy không cấp cho bước test hoặc PR lạ. Lab dùng AWS IAM Identity Center/SSO profile trên agent tin cậy, đăng nhập trước khi chạy và làm mới khi hết hạn; nếu dùng STS session, cấp đủ access key, secret key và session token ngắn hạn chỉ trong bước deploy. Không dùng access key dài hạn để thay thế bước thiết lập này. Quyền deploy giới hạn bucket/distribution lab; agent test không được truy cập profile deploy.</p>
+      <p><strong>Chiến lược release:</strong> asset có tên hash, giữ các asset của release còn hỗ trợ; publish HTML/config sau asset và kiểm tra metadata cache. Lưu toàn bộ artifact và config công khai theo phiên bản. Rollback phục hồi đúng artifact/config, xử lý cache rồi chạy browser smoke; không rebuild một commit cũ để giả làm artifact cũ. Lab serialize release; không cam kết cập nhật nguyên tử nhiều object hay đồng thời trên mọi browser.</p>
+      <p><strong>Tiêu chí kết thúc:</strong> Terraform dựng lại hosting; S3 không public; HTTPS/route sâu/asset đúng; test fail chặn publish; release tốt truy vết được; bản lỗi được phát hiện và rollback; alert có ALARM/OK; sửa được ba lỗi Kubernetes; README/runbook đủ để dựng lại và dọn tài nguyên.</p>
+      <p><strong>Để sau:</strong> EKS, multi-cloud, HA database, quản trị Jenkins/cluster, tự viết Helm chart, Ansible, SonarQube chuyên sâu và distributed tracing. Nếu công việc dùng SSR, dùng buổi mở rộng để thiết kế deploy Node/container cùng đội Platform sau khi hoàn thành các checkpoint chính.</p>
+    </section>
+    <section id="lo-trinh"><h2>30 buổi, mỗi buổi có bằng chứng</h2>
+      <p class="lead">Đánh dấu khi đạt đầu ra. Thanh tiến độ đếm 30 buổi chính, không phải điểm năng lực; 6 buổi bù đã được tính riêng vào thời gian.</p>
+      <div class="progress-box"><div><strong>Tiến độ buổi học</strong><div class="bar" role="progressbar" aria-label="Tiến độ 30 buổi học" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="bar"></i></div><div id="storage-note">Tiến độ lưu trên trình duyệt này.</div></div><div><span id="pct">0%</span><br><button type="button" id="reset">Đặt lại</button></div></div>
+      <div class="week" id="tuan-1"><div class="week-head"><div><h3>Tuần 1 · Hiệu chỉnh nền tảng &amp; chẩn đoán hệ thống</h3><p>Tận dụng kinh nghiệm phát triển web; kiểm tra phần Linux và vận hành bằng thao tác.</p></div><div class="hours">15h + 3h bù</div></div>
+        <div class="day"><span class="day-name">Buổi 01</span><span class="day-time">3h</span><span><b>Đánh giá đầu vào &amp; chọn app</b>90 phút: đọc Jenkinsfile, chỉ ra agent/artifact/credential và điểm chặn release; giải thích DNS → TLS → HTTP. 90 phút: tạo repo lab từ SPA cá nhân có sẵn, kiểm tra build/test và chuẩn bị Linux VM.</span><label><input type="checkbox" id="session-01" data-session="session-01"><span class="output">Bảng tự đánh giá “tự làm / cần tra / chưa làm”; app build được; VM truy cập được. Không dùng source hay cấu hình nội bộ công ty.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 02</span><span class="day-time">3h</span><span><b>Linux cho ứng dụng web</b>User, quyền file, process, port, systemd và journal. Chạy Node API tối giản có /healthz, /version và lỗi bật/tắt được trong lab; không cần database.</span><label><input type="checkbox" id="session-02" data-session="session-02"><span class="output">API chạy bằng user thường; tìm và sửa lỗi service dừng hoặc quyền file sai bằng log.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 03</span><span class="day-time">3h</span><span><b>Networking để debug</b>IP, subnet, route, DNS, TCP, TLS; dùng ip, ss, dig, curl. Phân biệt timeout, connection refused, lỗi TLS và HTTP 5xx.</span><label><input type="checkbox" id="session-03" data-session="session-03"><span class="output">Ghi bằng chứng cho 3 lỗi: sai DNS, sai port, process chết; chỉ ra tầng gây lỗi.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 04</span><span class="day-time">3h</span><span><b>Nginx, reverse proxy &amp; browser</b>Serve SPA, proxy /api tới Node; phân biệt URL browser dùng với địa chỉ nội bộ server. Ôn CORS, cookie Secure/SameSite và forwarded headers trong luồng request.</span><label><input type="checkbox" id="session-04" data-session="session-04"><span class="output">Reload một route sâu thành công; gọi /api qua cùng origin; sửa một lỗi 502 và giải thích vì sao CORS không sửa được lỗi đó.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 05</span><span class="day-time">3h</span><span><b>Bash &amp; checkpoint</b>Viết script smoke test kiểm tra HTTP status và version, timeout, exit code; ôn quoting và pipeline lỗi. Tra tài liệu được, tự giải thích từng bước.</span><label><input type="checkbox" id="session-05" data-session="session-05"><span class="output">Script thất bại khi API chết và đạt khi phục hồi; runbook ngắn: triệu chứng → giả thuyết → kiểm tra → cách sửa.</span></label></div>
+        <p class="gate"><strong>Checkpoint:</strong> Tự khoanh vùng 3 lỗi DNS/port/process bằng bằng chứng; chưa đạt thì dùng buổi bù trước Docker.</p>
+        <p class="buffer"><strong>Buổi bù tuần 1 · 3h dự phòng:</strong> sửa phần chưa đạt, hoàn thiện setup hoặc dựng lại không theo tutorial. Ngày 7 nghỉ.</p>
+        <div class="source-note"><strong>Đối chiếu workbook:</strong> Linux Lab 1–3: chọn phần quyền, service, network và script; bỏ các bài thuật toán Bash không phục vụ mục tiêu.<br><strong>Đọc chọn lọc:</strong> <a href="#ref-linux">Linux Day 1 — quản lý hệ thống &amp; networking</a> · <a href="#ref-bash">Linux Day 2 — Bash scripting</a> · <a href="#ref-git">Git — chỉ ôn phần chưa chắc</a> · <a href="#ref-jenkins">Jenkins — credentials, pipeline, agent</a></div>
+      </div>
+      <div class="week" id="tuan-2"><div class="week-head"><div><h3>Tuần 2 · Docker &amp; cách đóng gói frontend</h3><p>Cùng SPA và API từ tuần 1; hiểu cấu hình, cache và artifact trước khi đưa lên cloud.</p></div><div class="hours">15h + 3h bù</div></div>
+        <div class="day"><span class="day-name">Buổi 06</span><span class="day-time">3h</span><span><b>Image có thể dựng lại</b>Dockerfile multi-stage, lockfile, build context, .dockerignore, base image có phiên bản; build stage và runtime stage.</span><label><input type="checkbox" id="session-06" data-session="session-06"><span class="output">Image SPA gắn commit SHA; build từ checkout sạch và ghi phiên bản công cụ trong README.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 07</span><span class="day-time">3h</span><span><b>Cấu hình &amp; secrets</b>Phân biệt biến được nhúng khi build với cấu hình runtime công khai. Dùng runtime-config.json cho giá trị công khai để có thể promote cùng artifact; secret chỉ ở server/CI.</span><label><input type="checkbox" id="session-07" data-session="session-07"><span class="output">Cùng checksum bundle chạy với hai cấu hình công khai; kiểm tra bundle và image không chứa credential.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 08</span><span class="day-time">3h</span><span><b>Compose &amp; đường đi request</b>Compose chạy Nginx/SPA và Node API; service DNS, port publish, health check, log và SIGTERM. Browser gọi /api qua Nginx, không gọi hostname api trong mạng Docker.</span><label><input type="checkbox" id="session-08" data-session="session-08"><span class="output">Một lệnh dựng được app; FE gọi API; dừng API để quan sát lỗi, khởi động lại để xác nhận phục hồi.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 09</span><span class="day-time">3h</span><span><b>Cache &amp; release frontend</b>HTML/config có chính sách kiểm tra lại; asset có tên hash và cache dài. Tách cache browser, proxy/CDN và service worker; capstone chưa bật service worker.</span><label><input type="checkbox" id="session-09" data-session="session-09"><span class="output">Ma trận cache cho HTML/JS/config; DevTools và curl xác nhận header; không trả HTML cho asset JS bị thiếu.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 10</span><span class="day-time">3h</span><span><b>Artifact &amp; rollback local</b>Tạo release manifest gồm commit, checksum, cấu hình công khai và image tag/digest. Chạy bản v1/v2, smoke test rồi khôi phục artifact v1.</span><label><input type="checkbox" id="session-10" data-session="session-10"><span class="output">Rollback bằng artifact đã lưu, không rebuild source; kiểm tra version và một tương tác trên browser.</span></label></div>
+        <p class="gate"><strong>Checkpoint:</strong> Checkout sạch → build → Compose → FE gọi API; rollback đúng phiên bản; giải thích được build-time/runtime config.</p>
+        <p class="buffer"><strong>Buổi bù tuần 2 · 3h dự phòng:</strong> sửa phần chưa đạt, hoàn thiện setup hoặc dựng lại không theo tutorial. Ngày 7 nghỉ.</p>
+        <div class="source-note"><strong>Đối chiếu workbook:</strong> Docker Lab 1–2: chọn Nginx/Node; Lab 3: thay app MySQL bằng API không DB; Lab 4: làm một bài volume để hiểu dữ liệu ngoài container.<br><strong>Đọc chọn lọc:</strong> <a href="#ref-docker12">Docker Session 2 — Building Docker images</a> · <a href="#ref-docker35">Docker Session 5 — Docker và Node.js</a> · <a href="#ref-compose">Docker Compose — cú pháp hiện hành</a> · <a href="#ref-vite">Vite — biến môi trường và dữ liệu trong bundle</a> · <a href="#ref-cf-cache">CloudFront — version hóa tên file và cập nhật nội dung</a></div>
+      </div>
+      <div class="week" id="tuan-3"><div class="week-head"><div><h3>Tuần 3 · AWS phù hợp với frontend</h3><p>Capstone cloud là SPA trên S3 private + CloudFront HTTPS. API vẫn là lab local; bản cloud dùng fixture JSON cùng origin.</p></div><div class="hours">15h + 3h bù</div></div>
+        <div class="day"><span class="day-name">Buổi 11</span><span class="day-time">3h</span><span><b>IAM, chi phí &amp; mô hình cloud</b>Tạo môi trường học riêng; MFA, danh tính không phải root, credentials tạm thời và least privilege. Đặt budget trước khi tạo tài nguyên; đọc shared responsibility.</span><label><input type="checkbox" id="session-11" data-session="session-11"><span class="output">CLI xác định đúng danh tính; bảng quyền cần dùng và checklist chi phí/dọn tài nguyên. Budget alert là cảnh báo, không phải giới hạn chi tiêu cứng.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 12</span><span class="day-time">3h</span><span><b>S3 private &amp; artifact</b>Console/CLI: bucket private, Block Public Access, object metadata và policy. Dùng bucket lab riêng; học khái niệm versioning và retention.</span><label><input type="checkbox" id="session-12" data-session="session-12"><span class="output">Upload bản SPA; truy cập object ẩn danh bị từ chối; đọc được bằng danh tính có quyền; ghi manifest tài nguyên đã tạo.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 13</span><span class="day-time">3h</span><span><b>CloudFront &amp; HTTPS</b>Dùng S3 REST origin + Origin Access Control (OAC), giới hạn bucket policy theo distribution; đặt default root object là index.html. Dùng hostname HTTPS mặc định; domain riêng/ACM là bài mở rộng.</span><label><input type="checkbox" id="session-13" data-session="session-13"><span class="output">SPA truy cập qua CloudFront HTTPS; S3 direct vẫn bị từ chối; giải thích viewer → edge → origin.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 14</span><span class="day-time">3h</span><span><b>SPA routing &amp; cache CDN</b>Rewrite các route ứng dụng đã biết về /index.html bằng CloudFront Function; không rewrite /assets hoặc file thiếu. HTML/config dùng cache policy có minimum TTL 0; assets hash dùng cache dài.</span><label><input type="checkbox" id="session-14" data-session="session-14"><span class="output">Refresh /dashboard hoạt động; /assets/missing.js trả lỗi thay vì HTML 200; cập nhật HTML và xử lý invalidation đúng đường dẫn.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 15</span><span class="day-time">3h</span><span><b>AWS checkpoint &amp; quyết định kiến trúc</b>So sánh static hosting với Node SSR/container; đọc VPC, Security Group, EC2, ALB ở mức kiến trúc. Thử release v2 và restore HTML/config v1, giữ asset hash cũ.</span><label><input type="checkbox" id="session-15" data-session="session-15"><span class="output">Ghi một quyết định kiến trúc: vì sao chọn S3/CDN cho SPA và khi nào cần compute cho SSR; demo release/rollback có chứng cứ cache.</span></label></div>
+        <p class="gate"><strong>Checkpoint:</strong> HTTPS chạy được, bucket không public, route sâu và missing asset đúng, giải thích được giới hạn của static hosting.</p>
+        <p class="buffer"><strong>Buổi bù tuần 3 · 3h dự phòng:</strong> sửa phần chưa đạt, hoàn thiện setup hoặc dựng lại không theo tutorial. Ngày 7 nghỉ.</p>
+        <div class="source-note"><strong>Đối chiếu workbook:</strong> AWS IAM Lab 1: làm danh tính/quyền, hoãn phần Terraform EC2. AWS Lab 3: bản điều chỉnh dùng S3 private + CloudFront; không làm public website endpoint. Lab VPC/NAT/ASG không bắt buộc tạo.<br><strong>Đọc chọn lọc:</strong> <a href="#ref-iam">AWS IAM — file riêng</a> · <a href="#ref-s3">AWS S3 — file Module 6 (nội dung ghi Module 4)</a> · <a href="#ref-vpc">AWS Module 3 — Networking</a> · <a href="#ref-ec2">AWS Module 2 — Computing</a> · <a href="#ref-route53">AWS Module 7 — Route 53</a> · <a href="#ref-aws-auth">AWS IAM — MFA, credentials tạm thời và least privilege</a> · <a href="#ref-aws-budget">AWS Budgets — cảnh báo và độ trễ</a> · <a href="#ref-cf-oac">CloudFront — S3 private origin và OAC</a> · <a href="#ref-cf-rewrite">AWS sample — URL rewrite; cần điều chỉnh cho route SPA về /index.html</a> · <a href="#ref-cf-cache">CloudFront — version hóa tên file và cập nhật nội dung</a></div>
+      </div>
+      <div class="week" id="tuan-4"><div class="week-head"><div><h3>Tuần 4 · Terraform &amp; làm chủ quy trình release</h3><p>Tái tạo hạ tầng đã hiểu, rồi nối Jenkins. Tập trung review và độ tin cậy thay vì học lại khái niệm stage.</p></div><div class="hours">15h + 3h bù</div></div>
+        <div class="day"><span class="day-name">Buổi 16</span><span class="day-time">3h</span><span><b>Terraform căn bản</b>Provider, resource, variable, output, plan/apply/destroy và state. Tạo một bucket sandbox mới bằng code; dùng credentials ngoài .tf; chốt phiên bản và commit lockfile.</span><label><input type="checkbox" id="session-16" data-session="session-16"><span class="output">Giải thích từng thay đổi trong plan; apply bucket riêng; plan lần hai không có thay đổi. Không commit state hoặc plan chứa dữ liệu nhạy cảm.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 17</span><span class="day-time">3h</span><span><b>Codify static hosting</b>Mở rộng stack sandbox: CloudFront, OAC, bucket policy, cache behavior và route rewrite đã học. Terraform quản lý hạ tầng; release script quản lý nội dung SPA.</span><label><input type="checkbox" id="session-17" data-session="session-17"><span class="output">Endpoint mới chạy cùng artifact; README có bước tạo hạ tầng và publish tách biệt; không quản lý cùng một resource bằng hai state.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 18</span><span class="day-time">3h</span><span><b>Drift, state &amp; quyền deploy</b>Gây drift một tag rồi phát hiện bằng plan. Bảo vệ state local trong lab một người; đọc remote state/locking trước khi áp dụng nhóm. Tách quyền provision với quyền upload/invalidate của pipeline.</span><label><input type="checkbox" id="session-18" data-session="session-18"><span class="output">Plan phát hiện/sửa drift; policy deploy giới hạn bucket/distribution; dọn stack thủ công tuần 3 sau khi stack mới được xác nhận.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 19</span><span class="day-time">3h</span><span><b>Jenkins: kiểm tra → build → lưu release</b>Dùng controller lab local, agent build/deploy tách user theo kiến trúc đã chọn, hoặc Jenkins sandbox đã được phép dùng; SCM polling cho local. Kiểm tra lại artifact, credential scope, timeout và lưu dist theo commit/checksum.</span><label><input type="checkbox" id="session-19" data-session="session-19"><span class="output">Test fail chặn publish; test đạt tạo artifact định danh được; bước test không được cấp credential deploy. Nếu chưa tự viết được Jenkinsfile, dùng buổi bù để hoàn thiện.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 20</span><span class="day-time">3h</span><span><b>Jenkins: publish, smoke test, rollback</b>Agent dùng AWS CLI và credentials tạm thời có quyền giới hạn; có bước làm mới khi hết hạn. Serialize deployment; upload assets trước, config/HTML sau, invalidate cần thiết và chờ hoàn tất.</span><label><input type="checkbox" id="session-20" data-session="session-20"><span class="output">Pipeline deploy sandbox, smoke test route/version/assets; chạy bước rollback artifact v1 có kiểm tra lại; ghi cách trigger khi Jenkins chỉ chạy local.</span></label></div>
+        <p class="gate"><strong>Checkpoint:</strong> Terraform dựng được hosting; pipeline chặn test fail, lưu đúng artifact, deploy và rollback bằng phiên bản đã lưu.</p>
+        <p class="buffer"><strong>Buổi bù tuần 4 · 3h dự phòng:</strong> sửa phần chưa đạt, hoàn thiện setup hoặc dựng lại không theo tutorial. Ngày 7 nghỉ.</p>
+        <div class="source-note"><strong>Đối chiếu workbook:</strong> Linux Lab 5 chỉ để tham khảo cú pháp Terraform local. Không ép làm AWS Lab 1–2 theo template EC2/VPC; thay bằng S3/CloudFront sát mục tiêu. CI/CD Lab: chọn Git + Jenkins + Terraform + AWS, bỏ phần DB/Ansible bắt buộc.<br><strong>Đọc chọn lọc:</strong> <a href="#ref-terraform">Linux Day 4 — Terraform</a> · <a href="#ref-jenkins">Jenkins — credentials, pipeline, agent</a> · <a href="#ref-tf-state">Terraform — S3 backend, bảo vệ state và locking</a> · <a href="#ref-jenkins-creds">Jenkins — giới hạn credentials với pipeline không tin cậy</a> · <a href="#ref-jenkinsfile">Jenkins — lưu pipeline trong Jenkinsfile</a></div>
+      </div>
+      <div class="week" id="tuan-5"><div class="week-head"><div><h3>Tuần 5 · Kubernetes để phối hợp và xử lý sự cố</h3><p>Lab local với kind hoặc Minikube; cùng image từ tuần 2. Đọc cấu hình và vận hành workload ở mức ứng dụng.</p></div><div class="hours">15h + 3h bù</div></div>
+        <div class="day"><span class="day-name">Buổi 21</span><span class="day-time">3h</span><span><b>Deployment &amp; Service</b>Cài cluster local; học Pod, Deployment, Service, namespace, YAML và kubectl. Load image local theo hướng dẫn của công cụ; FE proxy API qua Service.</span><label><input type="checkbox" id="session-21" data-session="session-21"><span class="output">FE/API chạy qua Deployment; dùng port-forward để mở app; vẽ đường đi từ browser tới Pod.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 22</span><span class="day-time">3h</span><span><b>Config, probes &amp; resources</b>ConfigMap, Secret khái niệm, requests/limits, startup/readiness/liveness. Không coi Secret là mã hóa mặc định; cấu hình công khai của SPA vẫn tải qua runtime-config.</span><label><input type="checkbox" id="session-22" data-session="session-22"><span class="output">Readiness lỗi làm Pod ngừng nhận traffic qua Service; sửa cấu hình và xác nhận Ready; giải thích khi nào cần restart.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 23</span><span class="day-time">3h</span><span><b>Debug có hệ thống</b>Dùng logs, describe, events và endpoints để phân biệt image lỗi, crash, selector/port sai. Chỉ gây lỗi trong namespace lab.</span><label><input type="checkbox" id="session-23" data-session="session-23"><span class="output">Sửa 3 tình huống: image không tồn tại, process crash, Service selector sai; mỗi lỗi có bằng chứng trước/sau.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 24</span><span class="day-time">3h</span><span><b>Rollout &amp; rollback</b>Update image theo version, theo dõi rollout status; triển khai bản readiness lỗi rồi phục hồi bản tốt. Phân biệt rollback image với thay đổi ConfigMap ngoài Deployment revision.</span><label><input type="checkbox" id="session-24" data-session="session-24"><span class="output">Smoke test xác nhận phiên bản cũ hoạt động; ghi giới hạn rollback config và cách version hóa cấu hình.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 25</span><span class="day-time">3h</span><span><b>Handoff với đội Platform</b>Đọc values của một Helm chart mẫu, Ingress/TLS khái niệm; thống nhất health endpoint, resource budget, config, secret owner và deploy permissions.</span><label><input type="checkbox" id="session-25" data-session="session-25"><span class="output">Một trang deployment contract FE ↔ Platform và runbook; giải thích vì sao SPA tĩnh hiện tại vẫn phù hợp CDN hơn cluster.</span></label></div>
+        <p class="gate"><strong>Checkpoint:</strong> Tự đọc manifest, tìm đúng log, sửa ba lỗi và rollback; quản trị cluster, EKS và Helm chart tự viết là phần mở rộng.</p>
+        <p class="buffer"><strong>Buổi bù tuần 5 · 3h dự phòng:</strong> sửa phần chưa đạt, hoàn thiện setup hoặc dựng lại không theo tutorial. Ngày 7 nghỉ.</p>
+        <div class="source-note"><strong>Đối chiếu workbook:</strong> Kubernetes Lab 1: Deployment/namespace; Lab 2: ClusterIP + port-forward phù hợp local. Bỏ Big Lab full-stack, HA database, EFK và yêu cầu domain public; Helm chỉ đọc chart/values.<br><strong>Đọc chọn lọc:</strong> <a href="#ref-k8s">Kubernetes Session 7 — bắt đầu; học tiếp Session 8–10 cùng thư mục</a> · <a href="#ref-helm">Helm — đọc chart và values</a> · <a href="#ref-k8s-probes">Kubernetes — startup, readiness và liveness</a> · <a href="#ref-kind">kind — quick start và load image local</a></div>
+      </div>
+      <div class="week" id="tuan-6"><div class="week-head"><div><h3>Tuần 6 · Độ tin cậy, vận hành &amp; chuẩn hóa cho team</h3><p>Hoàn thiện capstone đã tích lũy; tạo bằng chứng về khả năng phát hiện và khôi phục sự cố.</p></div><div class="hours">15h + 3h bù</div></div>
+        <div class="day"><span class="day-name">Buổi 26</span><span class="day-time">3h</span><span><b>Quan sát release từ phía người dùng</b>CloudWatch CloudFront: request/error rate; đo HTTP status/version/latency bằng smoke test. Phân biệt HTTP 200 với app JS render đúng; thêm browser smoke cho route và tương tác chính.</span><label><input type="checkbox" id="session-26" data-session="session-26"><span class="output">Dashboard lab có metric, một browser smoke và bảng tín hiệu: CDN lỗi / JS lỗi / API lỗi; đọc Monitoring.pdf để hiểu vai trò Prometheus/Grafana.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 27</span><span class="day-time">3h</span><span><b>Alert &amp; diễn tập lỗi</b>Tạo CloudWatch alarm cho tỷ lệ 4xx trong distribution lab; gửi một lượng nhỏ request tới asset thiếu để vượt ngưỡng có kiểm soát; xác nhận ALARM rồi OK khi traffic tốt trở lại.</span><label><input type="checkbox" id="session-27" data-session="session-27"><span class="output">Cấu hình alarm, tạo lỗi có kiểm soát và lưu bằng chứng ALARM/OK khi metric cập nhật; nếu có độ trễ, kiểm tra lại ở buổi bù. Ghi cách xử lý missing data và runbook. Đây là bài cơ chế cảnh báo; ngưỡng production cần dựa trên traffic/SLO thực tế.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 28</span><span class="day-time">3h</span><span><b>Incident &amp; checklist release</b>Gây một release lỗi JS/asset có kiểm soát, phát hiện bằng browser smoke và rollback; ghi timeline, ảnh hưởng, nguyên nhân và hành động phòng ngừa.</span><label><input type="checkbox" id="session-28" data-session="session-28"><span class="output">Incident note; checklist team: người quyết định release/rollback, tín hiệu thành công, cache/config, trách nhiệm FE/Platform.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 29</span><span class="day-time">3h</span><span><b>Dựng lại &amp; kiểm tra bàn giao</b>Từ checkout và thư mục làm việc sạch, tạo stack sandbox mới bằng Terraform, deploy artifact đã lưu và chạy smoke. Setup credentials/state theo README, không dùng file bí mật trong repo.</span><label><input type="checkbox" id="session-29" data-session="session-29"><span class="output">Một người khác hoặc chính bạn theo README dựng được stack mới; thống kê thời gian, bước thủ công còn lại và tài nguyên phải dọn.</span></label></div>
+        <div class="day"><span class="day-name">Buổi 30</span><span class="day-time">3h</span><span><b>Demo, đánh giá &amp; dọn lab</b>Demo 10–15 phút: architecture → test fail gate → release tốt → release lỗi → rollback → debug K8s. Xóa stack lab và object/version theo checklist đã xác định; kiểm tra cloud inventory và chi phí còn ghi nhận.</span><label><input type="checkbox" id="session-30" data-session="session-30"><span class="output">Repo có Terraform, Jenkinsfile, Docker/Compose, manifest K8s, release manifest, runbook, quyết định kiến trúc và bằng chứng demo; ghi ba cải tiến sẽ áp dụng cho team.</span></label></div>
+        <p class="gate"><strong>Checkpoint:</strong> Hoàn thành mọi tiêu chí capstone bên dưới; phần chưa đạt chuyển sang buổi bù, không đánh dấu chỉ vì đã hết tuần.</p>
+        <p class="buffer"><strong>Buổi bù tuần 6 · 3h dự phòng:</strong> sửa phần chưa đạt, hoàn thiện setup hoặc dựng lại không theo tutorial. Ngày 7 nghỉ.</p>
+        <div class="source-note"><strong>Đối chiếu workbook:</strong> Monitoring.pdf: Prometheus/Grafana ở mức đọc hiểu; CloudWatch Module 9 cho lab AWS. CI/CD Lab: dùng tiêu chí diagram, update process, source và video, điều chỉnh phạm vi theo capstone SPA.<br><strong>Đọc chọn lọc:</strong> <a href="#ref-monitoring">Monitoring — Prometheus &amp; Grafana</a> · <a href="#ref-cloudwatch">AWS Module 9 — CloudWatch</a> · <a href="#ref-cf-metrics">CloudFront — metric CloudWatch (API dùng us-east-1)</a> · <a href="#ref-aws-budget">AWS Budgets — cảnh báo và độ trễ</a></div>
+      </div>
+    </section>
+    <section id="tai-lieu"><h2>Tài liệu gốc & phần bổ sung</h2>
+      <p class="lead">Slide là khung kiến thức; đối chiếu phiên bản và lệnh với tài liệu chính thức trước khi làm lab. Các phần CloudFront/OAC, frontend config và release cache là nội dung bổ sung, không mặc định đã có đầy đủ trong repo.</p>
+      <p><a href="DevOps%20Fresher%20Labs.docx">DevOps Fresher Labs.docx — workbook gốc</a>. Phần AWS trong workbook dùng Terraform sớm: chỉ làm đúng những phần đã ghi cho từng tuần, học Terraform ở tuần 4 trước các bài IaC. Không dùng lại account ID, credential hay endpoint ví dụ như cấu hình thật.</p>
+      <h3>Trong repo</h3><ul class="resources">
+        <li id="ref-linux"><a href="DevOps-Fresher-Slides/Slide%20Linux/Training%20Linux%20-%20Day%201%20-%20File%20%2C%20directory%20%26%20Management%2C%20networking.pdf">Linux Day 1 — quản lý hệ thống &amp; networking</a></li>
+        <li id="ref-bash"><a href="DevOps-Fresher-Slides/Slide%20Linux/Training%20Linux%20-%20Day%202%20-%20Bash%20scripting.pdf">Linux Day 2 — Bash scripting</a></li>
+        <li id="ref-git"><a href="DevOps-Fresher-Slides/CICD/Git.pdf">Git — chỉ ôn phần chưa chắc</a></li>
+        <li id="ref-jenkins"><a href="DevOps-Fresher-Slides/CICD/Jenkins.pdf">Jenkins — credentials, pipeline, agent</a></li>
+        <li id="ref-docker12"><a href="DevOps-Fresher-Slides/Docker-K8s/Session%202%20%20Building%20Docker%20images.pdf">Docker Session 2 — Building Docker images</a></li>
+        <li id="ref-docker35"><a href="DevOps-Fresher-Slides/Docker-K8s/Session%205%20%20Making%20a%20real%20project%20with%20Docker%20and%20NodeJs.pdf">Docker Session 5 — Docker và Node.js</a></li>
+        <li id="ref-iam"><a href="DevOps-Fresher-Slides/Slide%20AWS/IAM.pdf">AWS IAM — file riêng</a></li>
+        <li id="ref-s3"><a href="DevOps-Fresher-Slides/Slide%20AWS/Training%20AWS%20-%20Module%206%20-%20Storage%20S3%20in%20AWS.pdf">AWS S3 — file Module 6 (nội dung ghi Module 4)</a></li>
+        <li id="ref-vpc"><a href="DevOps-Fresher-Slides/Slide%20AWS/Training%20AWS%20-%20Module%203%20-%20Networking%20in%20AWS.pdf">AWS Module 3 — Networking</a></li>
+        <li id="ref-ec2"><a href="DevOps-Fresher-Slides/Slide%20AWS/Training%20AWS%20-%20Module%202%20-%20Computing%20in%20AWS.pdf">AWS Module 2 — Computing</a></li>
+        <li id="ref-route53"><a href="DevOps-Fresher-Slides/Slide%20AWS/Training%20AWS%20-%20Module%207%20-%20Route%2053.pdf">AWS Module 7 — Route 53</a></li>
+        <li id="ref-cloudwatch"><a href="DevOps-Fresher-Slides/Slide%20AWS/Training%20AWS%20-%20Module%209%20-%20CloudWatch.pdf">AWS Module 9 — CloudWatch</a></li>
+        <li id="ref-k8s"><a href="DevOps-Fresher-Slides/Docker-K8s/Session%207%20Kubernetes.pdf">Kubernetes Session 7 — bắt đầu; học tiếp Session 8–10 cùng thư mục</a></li>
+        <li id="ref-helm"><a href="DevOps-Fresher-Slides/Docker-K8s/Helm_chart.pdf">Helm — đọc chart và values</a></li>
+        <li id="ref-monitoring"><a href="DevOps-Fresher-Slides/CICD/Monitoring.pdf">Monitoring — Prometheus &amp; Grafana</a></li>
+        <li id="ref-terraform"><a href="DevOps-Fresher-Slides/Slide%20Linux/Training%20Linux%20-%20Day%204%20-%20Terraform.pdf">Linux Day 4 — Terraform</a></li>
+      </ul><h3>Tài liệu chính thức bổ sung</h3><ul class="resources">
+        <li id="ref-compose"><a href="https://docs.docker.com/compose/">Docker Compose — cú pháp hiện hành</a></li>
+        <li id="ref-vite"><a href="https://vite.dev/guide/env-and-mode">Vite — biến môi trường và dữ liệu trong bundle</a></li>
+        <li id="ref-aws-auth"><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html">AWS IAM — MFA, credentials tạm thời và least privilege</a></li>
+        <li id="ref-aws-budget"><a href="https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html">AWS Budgets — cảnh báo và độ trễ</a></li>
+        <li id="ref-cf-oac"><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html">CloudFront — S3 private origin và OAC</a></li>
+        <li id="ref-cf-rewrite"><a href="https://github.com/aws-samples/amazon-cloudfront-functions/blob/main/url-rewrite-single-page-apps/README.md">AWS sample — URL rewrite; cần điều chỉnh cho route SPA về /index.html</a></li>
+        <li id="ref-cf-ttl"><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Expiration.html">CloudFront — TTL, Cache-Control và cache policy</a></li>
+        <li id="ref-cf-cache"><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/UpdatingExistingObjects.html">CloudFront — version hóa tên file và cập nhật nội dung</a></li>
+        <li id="ref-cf-metrics"><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/programming-cloudwatch-metrics.html">CloudFront — metric CloudWatch (API dùng us-east-1)</a></li>
+        <li id="ref-tf-state"><a href="https://developer.hashicorp.com/terraform/language/backend/s3">Terraform — S3 backend, bảo vệ state và locking</a></li>
+        <li id="ref-jenkins-creds"><a href="https://www.jenkins.io/doc/book/security/securing-org-folders-and-multibranch-pipelines/">Jenkins — giới hạn credentials với pipeline không tin cậy</a></li>
+        <li id="ref-jenkinsfile"><a href="https://www.jenkins.io/doc/book/pipeline/jenkinsfile/">Jenkins — lưu pipeline trong Jenkinsfile</a></li>
+        <li id="ref-k8s-probes"><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/">Kubernetes — startup, readiness và liveness</a></li>
+        <li id="ref-kind"><a href="https://kind.sigs.k8s.io/docs/user/quick-start/">kind — quick start và load image local</a></li>
+      </ul>
+      <p><strong>Chi phí và an toàn trong lab:</strong> bật MFA và budget từ tuần 3; kiểm tra giá hiện hành và tài nguyên đang tồn tại, không mặc định free tier bao phủ toàn bộ. Chỉ gây lỗi trên tài nguyên học riêng. Khi dọn S3 có versioning, kiểm tra cả object versions/delete markers; giữ state tới khi việc dọn hạ tầng hoàn tất. Secret thuộc server/CI, không thuộc bundle frontend.</p>
+    </section>
+  </main>
+  <footer><div class="wrap">Cá nhân hóa theo mục tiêu Frontend/Tech Lead · Cập nhật 06/09/2026 · Có thể in thành PDF</div></footer>
+  <script>
+    const boxes = [...document.querySelectorAll('input[data-session]')];
+    const key = 'devops-fe-techlead-v1';
+    const note = document.querySelector('#storage-note');
+    let saved = [];
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || '[]');
+      if (Array.isArray(value)) saved = value;
+    } catch {
+      note.textContent = 'Không đọc được tiến độ đã lưu; bạn vẫn có thể dùng checklist.';
+    }
+    boxes.forEach(box => { box.checked = saved.includes(box.dataset.session); });
+    function update() {
+      const done = boxes.filter(box => box.checked).map(box => box.dataset.session);
+      const percent = Math.round(done.length / boxes.length * 100);
+      document.querySelector('#pct').textContent = percent + '%';
+      document.querySelector('#bar').style.width = percent + '%';
+      document.querySelector('[role="progressbar"]').setAttribute('aria-valuenow', percent);
+      try {
+        localStorage.setItem(key, JSON.stringify(done));
+      } catch {
+        note.textContent = 'Trình duyệt không cho lưu tiến độ; checklist chỉ giữ trong lần mở này.';
+      }
+    }
+    boxes.forEach(box => box.addEventListener('change', update));
+    document.querySelector('#reset').addEventListener('click', () => {
+      boxes.forEach(box => { box.checked = false; });
+      update();
+    });
+    update();
+  </script>
+</body>
+</html>
