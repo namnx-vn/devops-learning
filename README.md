@@ -5,24 +5,25 @@ Lộ trình DevOps cá nhân hóa cho Senior Frontend / Tech Lead.
 ## Current progress
 
 ```text
-Completed: 7 / 30 sessions
-Progress : 23%
+Completed: 9 / 30 sessions
+Progress : 30%
 Week 1   : ✅ Sessions 1–5
-Week 2   : ✅ Sessions 6–7
-Next     : Session 8 — Compose & Request Path
+Week 2   : ✅ Sessions 6–9
+Next     : Session 10 — Artifact & Rollback
 ```
 
-Session 7 đã hoàn thành checkpoint **Config & Secrets**:
+Session 9 đã hoàn thành checkpoint **Cache & Release Frontend**:
 
-- Phân biệt build-time metadata, runtime public config và secret.
-- Chứng minh `VITE_*` được nhúng vào frontend bundle khi build.
-- Chuyển public frontend config sang `runtime-config.json`.
-- Cùng Docker image chạy DEV/PROD bằng hai runtime config khác nhau.
-- Bundle checksum giữ nguyên giữa hai environment.
-- Runtime config được validate/fail-fast và có `schemaVersion`.
-- `runtime-config.json` có cache policy riêng để tránh stale config.
-- Bundle/image được scan và không chứa fake credential marker.
-- Hiểu image/config compatibility và tác động tới rollback.
+- Xây cache matrix cho `index.html`, `runtime-config.json` và hashed assets.
+- Hiểu `no-cache`, `no-store`, `max-age`, `immutable`.
+- Thực hành ETag revalidation và HTTP `304 Not Modified`.
+- Fix missing JS asset bị SPA fallback thành `index.html`; asset missing trả `404`.
+- Hiểu safe release: **assets first, HTML last**.
+- Hiểu lazy chunk failure và lý do cần old asset retention.
+- Phân biệt cache retention với origin asset retention.
+- Phân biệt browser cache, Service Worker, CDN/proxy và origin.
+- Hiểu targeted CDN invalidation và cache-policy prevention.
+- Xác định Docker frontend hiện tại chưa giữ old assets giữa các release.
 
 ## Learning material
 
@@ -30,24 +31,30 @@ Session 7 đã hoàn thành checkpoint **Config & Secrets**:
 - [Week 1 master summary](./Notes/index.md)
 - [Session 6 — Docker Image có thể dựng lại](./Notes/Session-6/index.md)
 - [Session 7 — Config & Secrets](./Notes/Session-7/index.md)
+- [Session 8 — Docker Compose & Request Path](./Notes/Session-8/index.md)
+- [Session 9 — Cache & Release Frontend](./Notes/Session-9/index.md)
 - [Debug command reference](./Notes/debug-command-reference.md)
 
 ## Next session
 
-**Session 8 — Compose & Request Path**
+**Session 10 — Artifact & Rollback**
 
-Mục tiêu:
+Tiếp tục từ cache/release lifecycle sang release identity và rollback:
 
 ```text
-Browser
+Git commit
    ↓
-Host port
+versioned artifact / image
    ↓
-Nginx / frontend container
+runtime config compatibility
    ↓
-Docker network
+release manifest
    ↓
-API service
+deploy
+   ↓
+verify
+   ↓
+rollback khi cần
 ```
 
-Dựng frontend + backend bằng một lệnh Compose, hiểu service DNS/port mapping/request path, và thực hành dừng API để quan sát lỗi rồi phục hồi.
+Mục tiêu là biết chính xác một release gồm những artifact/config nào, giữ version cũ bao lâu và rollback an toàn thay vì chỉ đổi một tag hoặc rebuild lại source.
